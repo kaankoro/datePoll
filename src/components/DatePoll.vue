@@ -14,36 +14,59 @@
           <span id="question-number" class="text-sm text-[#C7CED1] flex justify-between items-center gap-1">{{ currentQuestionNumber }} <p class="text-sm">of</p> {{ totalQuestions }}</span>
         </div>
       </div>
+      <div class="settings">
+      <span class="fas fa-cog" @click="toggleSettings" style="width: 100px; height: 100px; font-size: 25px;">&#x2699;</span>
+      <div v-if="showSettings" class="dropdown-menu">
+        <label>
+          <input type="radio" value="dd.mm.yyyy" v-model="userDateFormat" @change="resetDateFields">
+          DD.MM.YYYY
+        </label>
+        <label>
+          <input type="radio" value="mm.dd.yyyy" v-model="userDateFormat" @change="resetDateFields">
+          MM.DD.YYYY
+        </label>
+        <label>
+          <input type="radio" value="yyyy.mm.dd" v-model="userDateFormat" @change="resetDateFields">
+          YYYY.MM.DD
+        </label>
+      </div>
+    </div>
     <div style="position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%);" class="flex h-full overflow-hidden justify-center items-center pb-60px interactive-container bg-white">
      
-      <div class="container flex flex-col w-full h-full items-center lg:p-4 p-0 px-4 justify-center pt-14">
+      <div class="flex flex-col w-full h-full items-center lg:p-4 p-0 px-4 justify-center pt-14">
         <div class="flex w-full flex-col items-center max-w-420px max-h-calc(100%-70px)">
           <h2 id="question-title" class="widget-title w-full break-words lg:text-2xl text-lg font-semibold text-gray-1 text-[#4D525D] text-start">{{ currentQuestion.questionTitle }}</h2>
           <div class="lg:h-auto widget-box flex flex-col w-full items-center overflow-hidden overflow-y-auto lg:pb-auto justify-normal">
             <p class="widget-desc w-full break-words lgtext-lg text-base text-gray-1.5 mt-2 text-[#4D525D] text-start">{{ currentQuestion.questionDescription }}</p>
             <div class="date-input w-full lg:pr-4 flex flex-col gap-1 lg:gap-2 lg:max-h-full max-h-300px overflow-hidden overflow-y-scroll mt-4">
     <div class="date-field">
-    <label v-if="dateFormat === 'yyyy/mm/dd'" for="year-input" class="block text-sm font-medium text-gray-700">Year</label>
-    <input v-if="dateFormat === 'yyyy/mm/dd'" :class="yearClass" id="year-input" placeholder="YYYY" v-model="year" @input="validateYear" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-    <label v-if="dateFormat === 'mm/dd/yyyy'" for="month-input" class="block text-sm font-medium text-gray-700">Month</label>
-    <input v-if="dateFormat === 'mm/dd/yyyy'" :class="monthClass" id="month-input" placeholder="MM" v-model="month" @input="validateMonth" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-</div>
+    <label v-if="effectiveDateFormat === 'yyyy.mm.dd'" for="year-input" class="block text-sm font-medium text-gray-700">Year</label>
+    <input v-if="effectiveDateFormat === 'yyyy.mm.dd'" :class="yearClass" id="year-input" placeholder="YYYY" v-model="year" @input="validateYear" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    <label v-if="effectiveDateFormat === 'mm.dd.yyyy'" for="month-input" class="block text-sm font-medium text-gray-700">Month</label>
+    <input v-if="effectiveDateFormat === 'mm.dd.yyyy'" :class="monthClass" id="month-input" placeholder="MM" v-model="month" @input="validateMonth" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    <label v-if="effectiveDateFormat === 'dd.mm.yyyy'" for="day-input" class="block text-sm font-medium text-gray-700">Day</label>
+    <input v-if="effectiveDateFormat === 'dd.mm.yyyy'" :class="dayClass" id="day-input" placeholder="DD" v-model="day" @input="validateDay" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+  </div>
 <div class="separator">/</div>
 <div class="date-field">
 
-    <label v-if="dateFormat === 'yyyy/mm/dd'" for="month-input" class="block text-sm font-medium text-gray-700">Month</label>
-    <input v-if="dateFormat === 'yyyy/mm/dd'" :class="monthClass" id="month-input" placeholder="MM" v-model="month" @input="validateMonth" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-    <label v-if="dateFormat === 'mm/dd/yyyy'" for="day-input" class="block text-sm font-medium text-gray-700">Day</label>
-    <input v-if="dateFormat === 'mm/dd/yyyy'" :class="dayClass" id="day-input" placeholder="DD" v-model="day" @input="validateDay" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-</div>
+    <label v-if="effectiveDateFormat === 'yyyy.mm.dd'" for="month-input" class="block text-sm font-medium text-gray-700">Month</label>
+    <input v-if="effectiveDateFormat === 'yyyy.mm.dd'" :class="monthClass" id="month-input" placeholder="MM" v-model="month" @input="validateMonth" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    <label v-if="effectiveDateFormat === 'mm.dd.yyyy'" for="day-input" class="block text-sm font-medium text-gray-700">Day</label>
+    <input v-if="effectiveDateFormat === 'mm.dd.yyyy'" :class="dayClass" id="day-input" placeholder="DD" v-model="day" @input="validateDay" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    <label v-if="effectiveDateFormat === 'dd.mm.yyyy'" for="month-input" class="block text-sm font-medium text-gray-700">Month</label>
+    <input v-if="effectiveDateFormat === 'dd.mm.yyyy'" :class="monthClass" id="month-input" placeholder="MM" v-model="month" @input="validateMonth" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+  </div>
 <div class="separator">/</div>
     <div class="date-field">
     
-    <label v-if="dateFormat === 'yyyy/mm/dd'" for="day-input" class="block text-sm font-medium text-gray-700">Day</label>
-    <input v-if="dateFormat === 'yyyy/mm/dd'" :class="dayClass" id="day-input" placeholder="DD" v-model="day" @input="validateDay" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-    <label v-if="dateFormat === 'mm/dd/yyyy'" for="year-input" class="block text-sm font-medium text-gray-700">Year</label>
-    <input v-if="dateFormat === 'mm/dd/yyyy'" :class="yearClass" id="year-input" placeholder="YYYY" v-model="year" @input="validateYear" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-</div>
+    <label v-if="effectiveDateFormat === 'yyyy.mm.dd'" for="day-input" class="block text-sm font-medium text-gray-700">Day</label>
+    <input v-if="effectiveDateFormat === 'yyyy.mm.dd'" :class="dayClass" id="day-input" placeholder="DD" v-model="day" @input="validateDay" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    <label v-if="effectiveDateFormat === 'mm.dd.yyyy'" for="year-input" class="block text-sm font-medium text-gray-700">Year</label>
+    <input v-if="effectiveDateFormat === 'mm.dd.yyyy'" :class="yearClass" id="year-input" placeholder="YYYY" v-model="year" @input="validateYear" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    <label v-if="effectiveDateFormat === 'dd.mm.yyyy'" for="year-input" class="block text-sm font-medium text-gray-700">Year</label>
+    <input v-if="effectiveDateFormat === 'dd.mm.yyyy'" :class="yearClass" id="year-input" placeholder="YYYY" v-model="year" @input="validateYear" class="input-field-empty mt-1 block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+  </div>
     
   </div>
   <button @click="submitDate" class="submit-button rounded-md">Submit</button>
@@ -61,12 +84,17 @@
         questions: [],
         currentQuestionIndex: 0,
         month: '',
+        userDateFormat: '',
       day: '',
       year: '',
-      dateFormat: ''
+      dateFormat: '',
+      showSettings: false,
       };
     },
     computed: {
+      effectiveDateFormat() {
+      return this.userDateFormat || this.dateFormat;
+    },
       currentQuestion() {
         return this.questions[this.currentQuestionIndex] || {};
       },
@@ -91,11 +119,15 @@
     },
 
     methods: {
+      toggleSettings() {
+      this.showSettings = !this.showSettings;
+    },
         resetDateFields() {
     this.year = '';
     this.month = '';
     this.day = '';
   },
+
         async fetchQuestionData(questionNumber) {
   try {
     const response = await fetch('questions-data.json');
@@ -187,9 +219,7 @@ validateMonth() {
   </script>
   
   <style scoped>
-.container {
 
-}
   .flex { display: grid; }
   #question-number {display: ruby;}
   .date-input {
@@ -370,5 +400,26 @@ font-size: 1rem !important;
 "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji" !important;
 font-weight: 100;
   }
+.settings {
+  position: relative;
+  display: inline-block;
+  left:98%;
+}
+
+.fas.fa-cog {
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  display: block;
+  position: absolute;
+  left: auto;
+  right: 0;
+  top: 20px;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 1000;
+}
   </style>
   

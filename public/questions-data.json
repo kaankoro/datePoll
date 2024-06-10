@@ -3,12 +3,12 @@
     "questionNumber": 1,
     "questionTitle": "When were you born?",
     "questionDescription": "Please provide your date of birth.",
-    "dateFormat": "yyyy/mm/dd"
+    "dateFormat": "yyyy.mm.dd"
   },
   {
     "questionNumber": 2,
     "questionTitle": "When did you graduate?",
     "questionDescription": "Please provide your graduation date.",
-    "dateFormat": "mm/dd/yyyy"
+    "dateFormat": "mm.dd.yyyy"
   }
 ]
